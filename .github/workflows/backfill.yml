@@ -1,0 +1,55 @@
+name: backfill
+
+on:
+  workflow_dispatch:
+    inputs:
+      start:
+        description: "시작일 YYYYMMDD"
+        required: true
+      end:
+        description: "종료일 YYYYMMDD"
+        required: true
+      kinds:
+        description: "etf,futures,options 중 콤마로"
+        required: false
+        default: "etf"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: daily-report
+  cancel-in-progress: false
+
+env:
+  DATA_CACHE_PREFIX: krx-data-v1-
+
+jobs:
+  backfill:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install .
+      - name: Restore raw data
+        uses: actions/cache/restore@v4
+        with:
+          path: data
+          key: ${{ env.DATA_CACHE_PREFIX }}${{ github.run_id }}
+          restore-keys: ${{ env.DATA_CACHE_PREFIX }}
+      - name: Download history
+        env:
+          KRX_API_KEY: ${{ secrets.KRX_API_KEY }}
+          START: ${{ inputs.start }}
+          END: ${{ inputs.end }}
+          KINDS: ${{ inputs.kinds }}
+        run: python -m krxreport backfill --start "$START" --end "$END" --kinds "$KINDS"
+      - name: Save raw data
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: data
+          key: ${{ env.DATA_CACHE_PREFIX }}${{ github.run_id }}
