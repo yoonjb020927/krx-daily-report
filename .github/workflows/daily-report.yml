@@ -2,8 +2,11 @@ name: daily-report
 
 on:
   schedule:
-    # 09:00 KST, Tue–Sat (KRX publishes the previous trading day next morning). Cron is UTC.
-    - cron: "0 0 * * 2-6"
+    # Tue–Sat (KRX publishes the previous trading day next morning). Cron is UTC.
+    # GitHub delays or drops schedules at busy times like :00, so run off the hour
+    # and retry later; a run whose report already exists just skips.
+    - cron: "17 0 * * 2-6"   # 09:17 KST
+    - cron: "47 3 * * 2-6"   # 12:47 KST retry
   workflow_dispatch:
     inputs:
       date:
