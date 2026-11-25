@@ -1,4 +1,4 @@
-# KRX 데일리 리포트
+﻿# KRX 데일리 리포트
 
 [![ci](https://github.com/yoonjb020927/krx-daily-report/actions/workflows/ci.yml/badge.svg)](https://github.com/yoonjb020927/krx-daily-report/actions/workflows/ci.yml)
 [![daily-report](https://github.com/yoonjb020927/krx-daily-report/actions/workflows/daily-report.yml/badge.svg)](https://github.com/yoonjb020927/krx-daily-report/actions/workflows/daily-report.yml)
@@ -52,7 +52,7 @@ flowchart LR
 | `signals.py` | 시그널 3종, 초과수익 백테스트 |
 | `storage.py` | 하루 한 파일(`data/<종류>/<연도>/<날짜>.csv.gz`), 휴장일 기록 |
 | `pipeline.py` | 수집 → 저장 → 계산 → 출력, 과거 리포트 재생성 |
-| `.github/workflows/` | `daily-report`(평일 09:00 KST), `backfill`(수동), `ci`(push마다 테스트) |
+| `.github/workflows/` | `daily-report`(평일 09:17 KST, 12:47 재시도), `backfill`(수동), `ci`(push마다 테스트) |
 
 ## 실제 데이터에서 찾아 고친 문제들
 
